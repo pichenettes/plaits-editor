@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>Patch bank editor</title>
+  <link rel="stylesheet" href="style.css" >
+  <meta charset="UTF-8">  
+  <script type="text/javascript" src="encoder.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+</head>
+<body>
+  <div id="menu">
+    <ul>
+			<li><a href="patch_bank.html">FM Patch bank editor</a></li>
+			<li><a href="wavetable.html">Wavetable editor</a></li>
+			<li><a href="waveterrain.html">Wave terrain editor</a></li>
+		</ul>
+  </div>
+	
+  <div id="header">
+    <h1>Plaits FM patch bank editor</h1>
+  </div>
+
+  <div id="page">
+    <div id="editor">
+      <h2>Patch library</h2>
+      <div id="toolbar">
+        <ul>
+          <li><button id="playStopSynthButton" type="button" onclick="PatchBankApp.playStopSynth();" />Play</button></li>
+          <li><input id="note" type="range" min="24" max="72" step="1" value="48" oninput="PatchBankApp.updateParams();"><label for="note">Note</label></li>
+          <li><input id="velocity" type="range" min="0" max="1" step="0.01" value="0.8" oninput="PatchBankApp.updateParams();"><label for="velocity">Velocity</label></li>
+          <li><input id="brightness" type="range" min="0" max="1" step="0.01" value="0.5" oninput="PatchBankApp.updateParams();"><label for="brightness">Brightness</label></li>
+          <li><input id="envelope" type="range" min="0" max="1" step="0.01" value="0.5" oninput="PatchBankApp.updateParams();"><label for="envelope">Envelope</label></li>
+        </ul>
+      </div>
+      <h3>Import DX7 patches</h3>
+      <input type="file" id="syxFile" onchange="PatchBankApp.loadSYX(this);" accept=".syx,.raw" multiple>
+      <div id="banks" class="banksWrap">
+      </div>
+      <h3>My bank</h3>
+      <div id="selection"></div>
+      <div id="trash" class="bankContainer"><p>🗑️ Drop patches here to remove them</p></div>
+    </div>
+    <div id="transfer" style="visibility: hidden;">
+      <h2>Data transfer</h2>
+      <button id="playStopButton" type="button" onclick="PatchBankApp.playStop();">Play</button>
+      <input id="volume" type="range" min="0" max="1" value="1" step="0.01" oninput="PatchBankApp.setVolume(this);" />
+      <progress id="progressBar" max="100" value="0">0%</progress>
+      <p>This data must be played in Plaits' <b>TIMBRE</b> input, while one of the three 6-op FM models is selected.</p>
+      <p>This is <b>not</b> a full firmware update!</p>
+      <button type="button" onclick="PatchBankApp.download(false);">Download</button>
+      <button type="button" onclick="PatchBankApp.download(true);">Download .syx</button>
+    </div>
+  </div>
+
+<script type="text/javascript" src="patch_bank.js"></script>
+
+</body>
+</html>

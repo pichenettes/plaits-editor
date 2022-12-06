@@ -1,0 +1,72 @@
+<html>
+<head>
+  <title>Wavetable editor</title>
+  <link rel="stylesheet" href="style.css" >
+  <script type="text/javascript" src="encoder.js"></script>
+</head>
+<body>
+  <div id="menu">
+    <ul>
+			<li><a href="patch_bank.html">FM Patch bank editor</a></li>
+			<li><a href="wavetable.html">Wavetable editor</a></li>
+			<li><a href="waveterrain.html">Wave terrain editor</a></li>
+		</ul>
+  </div>
+	
+  <div id="header">
+    <h1>Plaits wavetable editor</h1>
+  </div>
+
+  <div id="page">
+    <div id="editor" class="editorContainer">
+			
+			<div class="editorPanel">
+	      <h2>Custom waves</h2>
+	      <canvas id="wavetableCanvas"></canvas>
+				<h4>Generate from equation</h4>
+	      <div><input type="text" id="expression" value="sin(phi + 3 * (x + 0.125) * sin((1 + floor(4 * y)) * phi))" size="50"/><button id="generate" type="button" onclick="WavetableApp.generateWavetable();" />Generate</button></div>
+	      <div id="expressionError">&nbsp;</div>
+				<h4>Load single cycle .wav files</h4>
+				<div><input id="phaseAlign" type="checkbox"><label for="phaseShift">Align all phases</label></div>
+	      <div><input type="file" id="wavFile" accept=".wav" onchange="WavetableApp.loadWAV(this);" multiple></div>
+			</div>
+			
+			<div class="editorPanel">
+	      <h2>Map</h2>
+	      <div id="toolbar">
+	        <ul>
+	          <li><button id="playStopWavetableButton" type="button" onclick="WavetableApp.playStopWavetable();" />Play</button></li>
+	          <li><input id="note" type="range" min="24" max="72" step="1" value="48" oninput="WavetableApp.updateParams();"><label for="note">Note</label></li>
+	        </ul>
+	      </div>
+	      <table>
+	        <tr>
+	          <td><input id="x" type="range" min="0" max="1" step="0.01" value="0.5" oninput="WavetableApp.updateParams();"></td>
+	          <td>&nbsp;</td></tr>
+	        </tr>
+	        <tr>
+	          <td><canvas id="mapCanvas"></canvas></td>
+	          <td><input id="y" type="range" min="0" max="1" step="0.01" value="0.5" oninput="WavetableApp.updateParams();"></td>
+	        </tr>
+	      </table>
+	    </div>
+			
+		</div>
+		
+    <div id="transfer">
+      <h2>Data transfer</h2>
+      <button id="playStopButton" type="button" onclick="WavetableApp.playStop();">Play</button>
+      <input type="range" min="0" max="1" value="1" step="0.01" oninput="WavetableApp.setVolume(this);" />
+      <progress id="progressBar" max="100" value="0">0%</progress>
+      <p>This data must be played in Plaits' <b>TIMBRE</b> input, while the wavetable model is selected.</p>
+      <p>This is <b>not</b> a full firmware update!</p>
+      <button type="button" onclick="WavetableApp.download(false);">Download</button>
+      <button type="button" onclick="WavetableApp.download(true);">Download .bin</button>
+    </div>
+  </div>
+
+<script type="text/javascript" src="plaits_waves.js"></script>
+<script type="text/javascript" src="wavetable.js"></script>
+
+</body>
+</html>

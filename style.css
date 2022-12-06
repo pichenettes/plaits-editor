@@ -1,0 +1,291 @@
+body {
+  background-color: #ddd;
+  font-family: Arial, Helvetica, Verdana, sans-serif;
+  font-size: 12px;
+  padding: 0px;
+  margin: 0px;
+}
+
+#menu {
+  background-color: #00726f;
+  color: #fff;
+  padding: 8px 20px;
+}
+
+#menu h1 {
+  font-size: 30px;
+  font-weight: normal;
+}
+
+#menu ul {
+  padding: 0px;
+}
+
+#menu ul li {
+  display: inline;
+  padding: 0px 12px 0px 0px;
+}
+
+#menu ul li a {
+  background-color: #00928f;
+  color: #fff;
+  padding: 8px 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#menu ul li a:hover {
+  background-color: #cc3868;
+}
+
+#header {
+  background-color: #00928f;
+  color: #fff;
+  padding: 4px 20px;
+}
+
+#header h1 {
+  font-size: 30px;
+  font-weight: normal;
+}
+
+#page {
+  padding: 0px 0px 20px 0px;
+  margin: 0px;
+}
+
+#editor {
+  background-color: #fff;
+  padding: 4px 20px 20px 20px;
+  margin: 0px;
+}
+
+#transfer {
+  padding: 4px 20px;
+  margin: 0px;
+}
+
+a {
+  font-weight: none;
+  text-decoration: none;
+  border-bottom: none;
+  color: #00928f;
+}
+
+a:hover {
+  color: #cc3868;
+}
+
+h2 {
+  width: 100%;
+  border-bottom: 1px dotted #666;
+  font-size: 24px;
+  color: #333;
+}
+
+h3 {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #cc3868;
+}
+
+h4 {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: black;
+}
+
+/* Styles for the waveterrain expression editor and plot. */
+
+#toolbar ul {
+  padding: 0px;
+}
+
+#toolbar ul li {
+  display: inline;
+  padding: 0px 12px 0px 0px;
+}
+
+input[type="checkbox"] {
+  vertical-align: center;
+  line-height: 30px;
+}
+
+label {
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 30px;
+  vertical-align: center;
+}
+
+#expression {
+  font-family: monospace, Courier;
+  font-size: 14px;
+}
+
+#expressionError {
+  font-family: monospace, Courier;
+  padding: 8px;
+}
+
+canvas {
+  margin: 0px;
+  padding: 0px;
+}
+
+#canvases {
+  background-color: black;
+  margin: 0px;
+  width: 772px;
+  height: 256px;
+  padding: 0px;
+}
+
+#mapCanvas {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+#x {
+  width: 98%;
+  padding: 0px 0px;
+}
+
+#y {
+  transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  width: 384px;
+  margin-left: -192px;
+}
+
+/* Styles for the wavetable editor */
+
+.editorContainer {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+}
+
+.editorPanel {
+  flex-basis: 500px;
+}
+
+/* Styles for the patch bank librarian */
+
+.banksWrap {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-flow: row wrap;
+}
+
+.bankContainerWrap {
+  flex-basis: 1020px;
+}
+
+.bankContainer {
+  padding: 10px 10px;
+  border: 2px dotted #ccc;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 10px;
+  position: relative;
+}
+
+.patchContainer {
+  padding: 5px 5px;
+  border: 2px solid #ccc;
+  flex-basis: 100px;
+  cursor: grab;
+  background-color: #fff;
+}
+
+.patchContainer.excluded {
+  background-color: #ddd
+}
+
+.patchContainer p {
+  padding: 0px;
+  margin: 0px;
+}
+
+.selected {
+  border-color: #00928f;
+}
+
+#selection .selected {
+  border-color: #cc3868;
+}
+
+.patchBankName {
+  color: #888;
+  font-size: 10px;
+}
+
+.patchIndex {
+  font-weight: bold;
+  color: #00928f;
+  font-family: monospace, Courier;
+  font-size: 14px;
+}
+
+.patchName {
+  font-size: 12px;
+  font-family: monospace, Courier;
+}
+
+.patchDetails {
+  font-size: 10px;
+  color: #666;
+}
+
+#selection {
+  background-color: #eee;
+  max-width: 1020px;
+}
+
+#selection .bankContainer {
+  border: 2px dotted #ddd;
+}
+
+#selection .patchIndex {
+  color: #cc3868;;
+}
+
+#selection .excluded .patchIndex {
+  color: #000;
+}
+
+#trash {
+  display: block;
+  max-width: 995px;
+}
+
+#trash .patchContainer {
+  display: none;
+}
+
+#trash p {
+  text-align: center;
+  font-weight: bold;
+  color: #999;
+}
+
+.close:after {
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  content: "\00d7";
+  color: #ccc;
+  font-size: 20px;
+}
+
+.close:hover:after {
+  color: #f00;
+}
