@@ -289,3 +289,10 @@ canvas {
 .close:hover:after {
   color: #f00;
 }
+
+#infobox {
+  margin: 30px;
+  padding: 16px;
+  border: 2px dotted #ddd;
+  font-size: 16px;
+}
