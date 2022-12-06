@@ -1,5 +1,7 @@
 Editor for Mutable Instruments Plaits models.
 
+[Try me here!](https://pichenettes.github.io/plaits-editor/)
+
 License
 =======
 
