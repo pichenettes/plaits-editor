@@ -1,0 +1,23 @@
+{
+  "name": "plaits-editor",
+  "version": "1.0.0-alpha.1",
+  "type": "module",
+  "repository": "git@github.com:johnhooks/plaits-editor.git",
+  "author": "John Hooks <bitmachina@outlook.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "http-server public --port 8080",
+    "build": "rollup --config rollup.config.cjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.2.0",
+    "@rollup/plugin-typescript": "10.0.1",
+    "@types/webmidi": "2.0.6",
+    "http-server": "^14.1.1",
+    "prettier": "2.8.1",
+    "rollup": "3.7.4",
+    "sortablejs": "^1.15.0",
+    "tslib": "2.4.1",
+    "typescript": "4.9.4"
+  }
+}

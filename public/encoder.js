@@ -1,6 +1,6 @@
 // Copyright 2022 Emilie Gillet.
 //
-// Author: Emilie Gillet (emilie.o.gillet@gmail.com)
+// Authors: Emilie Gillet (emilie.o.gillet@gmail.com) and John Hooks (bitmachina@outlook.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -8,10 +8,10 @@
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -19,7 +19,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // See http://creativecommons.org/licenses/MIT/ for more information.
 //
 // -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ class Encoder {
     this.symbolDurations = encoding.symbolDurations;
     this.packetSize = encoding.packetSize;
     this.samples = [];
-    
+
     const fn = encoding.shape == 'cosine' ? Math.cos : Math.sin;
     const noDC = encoding.shape == 'sine_no_dc';
     for (let duration of encoding.symbolDurations) {
@@ -110,7 +110,7 @@ class Encoder {
     }
     this.format = format;
   }
-  
+
   encode(symbols) {
     let totalDuration = 0;
     for (let symbol of symbols) {
@@ -125,13 +125,13 @@ class Encoder {
     }
     return block;
   }
-  
+
   codeBlank(duration) {
     let n = Math.ceil(
         duration * this.sampleRate / this.symbolDurations[2]);
     return this.encode(Array(n).fill(2));
   }
-  
+
   pad(data, size) {
     let n = data.length;
     if (n % size != 0) {
@@ -141,7 +141,7 @@ class Encoder {
     }
     return data;
   }
-  
+
   codePacket(packet) {
     console.assert(packet.length <= this.packetSize);
     packet = this.pad(packet, this.packetSize);
@@ -162,7 +162,7 @@ class Encoder {
     }
     return this.encode(symbolStream);
   }
-  
+
   code(data, tags) {
     // Replace the last bytes of data with the tag.
     data = this.pad(data, this.format.pageSize);
@@ -180,13 +180,13 @@ class Encoder {
       }
     }
     buffers.push(this.codeBlank(this.format.outroDuration));
-    
+
     // Compute the total size.
     let totalSize = 0;
     for (let buffer of buffers) {
       totalSize += buffer.length;
     }
-    
+
     // Splice everything together.
     let output = new Float32Array(totalSize);
     let i = 0;
@@ -196,21 +196,21 @@ class Encoder {
     }
     return output;
   }
-  
+
   toWAV(audioSamples) {
     let buffer = new ArrayBuffer(44 + audioSamples.length * 2);
     let view = new DataView(buffer);
-    
+
     let writeTag = function(offset, tag) {
       for (let i = 0; i < tag.length; i++) {
         view.setUint8(offset + i, tag.charCodeAt(i));
       }
     }
-    
+
     writeTag(0, 'RIFF');
     view.setUint32(4, 36 + audioSamples.length * 2, true);
     writeTag(8, 'WAVE');
-    
+
     writeTag(12, 'fmt ');
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true);
@@ -219,7 +219,7 @@ class Encoder {
     view.setUint32(28, this.sampleRate * 2, true);
     view.setUint16(32, 2, true);
     view.setUint16(34, 16, true);
-    
+
     writeTag(36, 'data');
     view.setUint32(40, audioSamples.length * 2, true);
     for (let i = 0; i < audioSamples.length; i++) {
@@ -228,7 +228,7 @@ class Encoder {
     }
     return buffer;
   }
-  
+
   static create() {
     // Default encoding and format for Plaits.
     let encoding = {
