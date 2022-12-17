@@ -65,6 +65,10 @@ body {
   margin: 0px;
 }
 
+#midi ul li {
+  list-style: none;
+}
+
 a {
   font-weight: none;
   text-decoration: none;

@@ -1,0 +1,10 @@
+{
+  "name": "plaits-editor",
+  "version": "1.0.0-alpha.1",
+  "private": true,
+  "description": "Editor for Mutable Instruments Plaits models.",
+  "devDependencies": {
+    "@types/webmidi": "2.0.6"
+  },
+  "license": "MIT"
+}

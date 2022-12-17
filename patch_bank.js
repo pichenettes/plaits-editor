@@ -128,16 +128,18 @@ class PatchBank {
       element.dataset.index = patch.index;
       element.dataset.id = this.cleanName + '|' + patch.index;
       element.className = 'patchContainer';
-      element.addEventListener("mouseenter", function(e) {
+      element.addEventListener('click', function (e) {
         const synth = PatchBankApp.synthSource;
         if (synth) {
           synth.port.postMessage(['setPatch', patch.data]);
-          synth.parameters.get('gate').value = 1.0;
+          if (!MidiDevicesApp.connected()) {
+            synth.parameters.get('gate').value = 1.0;
+          }
         }
       });
       element.addEventListener("mouseleave", function(e) {
         const synth = PatchBankApp.synthSource;
-        if (synth) {
+        if (synth && !MidiDevicesApp.connected()) {
           synth.parameters.get('gate').value = 0.0;
         }
       });
