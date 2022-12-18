@@ -78,7 +78,7 @@ const CrcTable = [
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
 ] as const;
 
-function crc32(crc, data) {
+function crc32(crc: number, data: Uint8Array) {
 	crc = ~~crc ^ -1;
 	for (let n = 0; n < data.length; n++) {
 		crc = CrcTable[(crc ^ data[n]) & 0xff] ^ (crc >>> 8);
@@ -92,7 +92,7 @@ export class Encoder {
 	#symbolDurations: Encoding["symbolDurations"];
 	#packetSize: Encoding["packetSize"];
 	#polarity = 0;
-	#samples = [];
+	#samples: Float32Array[][] = [];
 
 	constructor(encoding: Encoding, format: Format) {
 		this.#sampleRate = encoding.sampleRate;
@@ -103,9 +103,9 @@ export class Encoder {
 		const noDC = encoding.shape == "sine_no_dc";
 
 		for (let duration of encoding.symbolDurations) {
-			let gain = noDC ? Math.max(encoding.symbolDurations[0] / duration, 0.5) : 1.0;
-			let plus = new Float32Array(duration);
-			let minus = new Float32Array(duration);
+			const gain = noDC ? Math.max(encoding.symbolDurations[0] / duration, 0.5) : 1.0;
+			const plus = new Float32Array(duration);
+			const minus = new Float32Array(duration);
 			for (let i = 0; i < duration; i++) {
 				plus[i] = fn((i / duration) * Math.PI) * gain;
 				minus[i] = -plus[i];
@@ -120,7 +120,7 @@ export class Encoder {
 		for (const symbol of symbols) {
 			totalDuration += this.#symbolDurations[symbol];
 		}
-		let block = new Float32Array(totalDuration);
+		const block = new Float32Array(totalDuration);
 		let i = 0;
 		for (const symbol of symbols) {
 			block.set(this.#samples[symbol][this.#polarity], i);
@@ -131,54 +131,54 @@ export class Encoder {
 	}
 
 	codeBlank(duration: number) {
-		let n = Math.ceil((duration * this.#sampleRate) / this.#symbolDurations[2]);
+		const n = Math.ceil((duration * this.#sampleRate) / this.#symbolDurations[2]);
 		return this.encode(new Uint8Array(Array(n).fill(2)));
 	}
 
 	pad(data: Uint8Array, size: number) {
-		let n = data.length;
+		const n = data.length;
 		if (n % size != 0) {
-			let paddedData = new Uint8Array(n + size - (n % size));
+			const paddedData = new Uint8Array(n + size - (n % size));
 			paddedData.set(data);
 			data = paddedData;
 		}
 		return data;
 	}
 
-	codePacket(packet) {
-		console.assert(packet.length <= this.packetSize);
-		packet = this.pad(packet, this.packetSize);
-		let crc = CRC.crc32(0, packet);
-		let header = new Uint8Array([0x55, 0x55, 0x55, 0x55]);
-		let footer = new Uint8Array([crc >>> 24, (crc >>> 16) & 0xff, (crc >>> 8) & 0xff, crc & 0xff]);
-		let symbolStream = [];
-		for (let block of [header, packet, footer]) {
-			for (let byte of block) {
+	codePacket(packet: Uint8Array) {
+		console.assert(packet.length <= this.#packetSize);
+		packet = this.pad(packet, this.#packetSize);
+		const crc = crc32(0, packet);
+		const header = new Uint8Array([0x55, 0x55, 0x55, 0x55]);
+		const footer = new Uint8Array([crc >>> 24, (crc >>> 16) & 0xff, (crc >>> 8) & 0xff, crc & 0xff]);
+		const symbolStream = [];
+		for (const block of [header, packet, footer]) {
+			for (const byte of block) {
 				for (let bit = 0; bit < 8; bit++) {
 					symbolStream.push(byte & (0x80 >> bit) ? 1 : 0);
 				}
 			}
 		}
-		return this.encode(symbolStream);
+		return this.encode(new Uint8Array(symbolStream));
 	}
 
-	code(data, tags) {
+	code(data: Uint8Array, tags: number[]) {
 		// Replace the last bytes of data with the tag.
-		data = this.pad(data, this.format.pageSize);
+		data = this.pad(data, this.#format.pageSize);
 		for (let i = 0; i < tags.length; i++) {
 			data[data.length - tags.length + i] = tags[i];
 		}
 
 		// Collect all pieces of the output signal.
 		let buffers = [];
-		buffers.push(this.codeBlank(this.format.introDuration));
-		for (let i = 0; i < data.length; i += this.packetSize) {
-			buffers.push(this.codePacket(data.slice(i, i + this.packetSize)));
-			if (i % this.format.pageSize == 0) {
-				buffers.push(this.codeBlank(this.format.blankDuration));
+		buffers.push(this.codeBlank(this.#format.introDuration));
+		for (let i = 0; i < data.length; i += this.#packetSize) {
+			buffers.push(this.codePacket(data.slice(i, i + this.#packetSize)));
+			if (i % this.#format.pageSize == 0) {
+				buffers.push(this.codeBlank(this.#format.blankDuration));
 			}
 		}
-		buffers.push(this.codeBlank(this.format.outroDuration));
+		buffers.push(this.codeBlank(this.#format.outroDuration));
 
 		// Compute the total size.
 		let totalSize = 0;
@@ -196,11 +196,11 @@ export class Encoder {
 		return output;
 	}
 
-	toWAV(audioSamples) {
-		let buffer = new ArrayBuffer(44 + audioSamples.length * 2);
-		let view = new DataView(buffer);
+	toWAV(audioSamples: Uint8Array) {
+		const buffer = new ArrayBuffer(44 + audioSamples.length * 2);
+		const view = new DataView(buffer);
 
-		let writeTag = function (offset, tag) {
+		const writeTag = function (offset: number, tag: string) {
 			for (let i = 0; i < tag.length; i++) {
 				view.setUint8(offset + i, tag.charCodeAt(i));
 			}
@@ -214,8 +214,8 @@ export class Encoder {
 		view.setUint32(16, 16, true);
 		view.setUint16(20, 1, true);
 		view.setUint16(22, 1, true);
-		view.setUint32(24, this.sampleRate, true);
-		view.setUint32(28, this.sampleRate * 2, true);
+		view.setUint32(24, this.#sampleRate, true);
+		view.setUint32(28, this.#sampleRate * 2, true);
 		view.setUint16(32, 2, true);
 		view.setUint16(34, 16, true);
 
@@ -230,18 +230,19 @@ export class Encoder {
 
 	static create() {
 		// Default encoding and format for Plaits.
-		let encoding = {
-			sampleRate: 48000.0,
-			symbolDurations: [24, 60, 108],
-			packetSize: 256,
-			shape: "cosine",
-		};
-		let format = {
-			pageSize: 256,
-			blankDuration: 0.1,
-			introDuration: 0.5,
-			outroDuration: 1.25,
-		};
-		return new Encoder(encoding, format);
+		return new Encoder(
+			{
+				sampleRate: 48000.0,
+				symbolDurations: [24, 60, 108],
+				packetSize: 256,
+				shape: "cosine",
+			},
+			{
+				pageSize: 256,
+				blankDuration: 0.1,
+				introDuration: 0.5,
+				outroDuration: 1.25,
+			}
+		);
 	}
 }
