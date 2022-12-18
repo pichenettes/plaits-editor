@@ -1,56 +1,104 @@
 <html>
-<head>
-  <title>Wave terrain editor</title>
-  <link rel="stylesheet" href="style.css" >
-  <script type="text/javascript" src="encoder.js"></script>
-</head>
-<body>
-  <div id="menu">
-    <ul>
-			<li><a href="patch_bank.html">FM Patch bank editor</a></li>
-			<li><a href="wavetable.html">Wavetable editor</a></li>
-			<li><a href="waveterrain.html">Wave terrain editor</a></li>
-		</ul>
-  </div>
-	
-  <div id="header">
-    <h1>Plaits wave terrain editor</h1>
-  </div>
+	<head>
+		<title>Wave terrain editor</title>
+		<link rel="stylesheet" href="style.css" />
+		<script type="text/javascript" src="encoder.js"></script>
+	</head>
+	<body>
+		<div id="menu">
+			<ul>
+				<li><a href="patch_bank.html">FM Patch bank editor</a></li>
+				<li><a href="wavetable.html">Wavetable editor</a></li>
+				<li><a href="waveterrain.html">Wave terrain editor</a></li>
+			</ul>
+		</div>
 
-  <div id="page">
-    <div id="editor">
-      <h2>Wave terrain</h2>
-      <div id="toolbar">
-        <ul>
-          <li><button id="playStopWaveTerrainButton" type="button" onclick="WaveTerrainApp.playStopWaveTerrain();" />Play</button></li>
-          <li><input id="note" type="range" min="24" max="72" step="1" value="48" oninput="WaveTerrainApp.updateParams();"><label for="note">Note</label></li>
-          <li><input id="radius" type="range" min="0.1" max="1" step="0.01" value="0.5" oninput="WaveTerrainApp.updateParams();"><label for="radius">Radius</label></li>
-          <li><input id="offset" type="range" min="-1" max="1" step="0.01" value="0.0" oninput="WaveTerrainApp.updateParams();"><label for="offset">Offset</label></li>
-          <li><input id="aux" type="checkbox" onchange="WaveTerrainApp.updateParams();"/><label for="aux">Aux</li>
-        </ul>
-        <div id="canvases" class="terrain">
-          <canvas id="terrainCanvas"></canvas>
-          <canvas id="waveformCanvas"></canvas>
-        </div>
-        <h4>Generate from equation</h4>
-        <input type="text" id="expression" value="sin(5 * (y + theta))" size="50"/><button id="generate" type="button" onclick="WaveTerrainApp.generate();" />Generate</button>
-        <div id="expressionError">&nbsp;</div>
-        <h4>Upload image</h4>
-	      <div><input type="file" id="imageFile" accept=".png,.jpg,.jpeg,.gif" onchange="WaveTerrainApp.loadImage(this);"></div>
-      </div>
-    </div>
-    <div id="transfer">
-      <h2>Data transfer</h2>
-      <button id="playStopButton" type="button" onclick="WaveTerrainApp.playStop();">Play</button>
-      <input type="range" min="0" max="1" value="1" step="0.01" oninput="WaveTerrainApp.setVolume(this);" />
-      <progress id="progressBar" max="100" value="0">0%</progress>
-      <p>This data must be played in Plaits' <b>TIMBRE</b> input, while the wave terrain model is selected.</p>
-      <p>This is <b>not</b> a full firmware update!</p>
-      <button type="button" onclick="WaveTerrainApp.download();">Download</button>
-    </div>
-  </div>
+		<div id="header">
+			<h1>Plaits wave terrain editor</h1>
+		</div>
 
-<script type="text/javascript" src="waveterrain.js"></script>
+		<div id="page">
+			<div id="editor">
+				<h2>Wave terrain</h2>
+				<div id="toolbar">
+					<ul>
+						<li>
+							<button id="playStopWaveTerrainButton" type="button" onclick="WaveTerrainApp.playStopWaveTerrain();">
+								Play
+							</button>
+						</li>
+						<li>
+							<input
+								id="note"
+								type="range"
+								min="24"
+								max="72"
+								step="1"
+								value="48"
+								oninput="WaveTerrainApp.updateParams();"
+							/><label for="note">Note</label>
+						</li>
+						<li>
+							<input
+								id="radius"
+								type="range"
+								min="0.1"
+								max="1"
+								step="0.01"
+								value="0.5"
+								oninput="WaveTerrainApp.updateParams();"
+							/><label for="radius">Radius</label>
+						</li>
+						<li>
+							<input
+								id="offset"
+								type="range"
+								min="-1"
+								max="1"
+								step="0.01"
+								value="0.0"
+								oninput="WaveTerrainApp.updateParams();"
+							/><label for="offset">Offset</label>
+						</li>
+						<li>
+							<input id="aux" type="checkbox" onchange="WaveTerrainApp.updateParams();" /><label for="aux">Aux</label>
+						</li>
+					</ul>
+					<div id="canvases" class="terrain">
+						<canvas id="terrainCanvas"></canvas>
+						<canvas id="waveformCanvas"></canvas>
+					</div>
+					<h4>Generate from equation</h4>
+					<input type="text" id="expression" value="sin(5 * (y + theta))" size="50" /><button
+						id="generate"
+						type="button"
+						onclick="WaveTerrainApp.generate();"
+					>
+						Generate
+					</button>
+					<div id="expressionError">&nbsp;</div>
+					<h4>Upload image</h4>
+					<div>
+						<input
+							type="file"
+							id="imageFile"
+							accept=".png,.jpg,.jpeg,.gif"
+							onchange="WaveTerrainApp.loadImage(this);"
+						/>
+					</div>
+				</div>
+			</div>
+			<div id="transfer">
+				<h2>Data transfer</h2>
+				<button id="playStopButton" type="button" onclick="WaveTerrainApp.playStop();">Play</button>
+				<input type="range" min="0" max="1" value="1" step="0.01" oninput="WaveTerrainApp.setVolume(this);" />
+				<progress id="progressBar" max="100" value="0">0%</progress>
+				<p>This data must be played in Plaits' <b>TIMBRE</b> input, while the wave terrain model is selected.</p>
+				<p>This is <b>not</b> a full firmware update!</p>
+				<button type="button" onclick="WaveTerrainApp.download();">Download</button>
+			</div>
+		</div>
 
-</body>
+		<script type="text/javascript" src="waveterrain.js"></script>
+	</body>
 </html>

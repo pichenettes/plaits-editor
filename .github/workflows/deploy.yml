@@ -3,7 +3,7 @@ name: Deploy static site to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['pages']
+    branches: ["pages"]
   pull_request:
 
   # Allows you to run this workflow manually from the Actions tab
@@ -17,7 +17,7 @@ permissions:
 
 # Allow one concurrent deployment
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: true
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: "16"
 
       - name: Setup Pages
         uses: actions/configure-pages@v2

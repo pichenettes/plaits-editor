@@ -2,8 +2,7 @@
 
 [Try me here!](https://johnhooks.github.io/plaits-editor/)
 
-License
-=======
+# License
 
 MIT license.
 

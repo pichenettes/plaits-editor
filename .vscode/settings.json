@@ -1,20 +1,20 @@
 {
-  "files.exclude": {
-    "**/node_modules": true,
-  },
-  "search.exclude": {
-    "lib/**": true,
-    "public/assets/**": true,
-    "node_modules/**": true,
-    "package-lock.json": true
-  },
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "typescript.autoClosingTags": false
+	"files.exclude": {
+		"**/node_modules": true
+	},
+	"search.exclude": {
+		"lib/**": true,
+		"public/assets/**": true,
+		"node_modules/**": true,
+		"package-lock.json": true
+	},
+	"[javascript]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"typescript.autoClosingTags": false
 }
