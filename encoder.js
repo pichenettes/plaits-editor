@@ -98,7 +98,7 @@ class Encoder {
     const fn = encoding.shape == 'cosine' ? Math.cos : Math.sin;
     const noDC = encoding.shape == 'sine_no_dc';
     for (let duration of encoding.symbolDurations) {
-      let gain = noDC ? Math.max(symbolDurations[0] / duration, 0.5) : 1.0;
+      let gain = noDC ? Math.max(encoding.symbolDurations[0] / duration, 0.5) : 1.0;
       let plus = new Float32Array(duration);
       let minus = new Float32Array(duration);
       for (let i = 0; i < duration; i++) {
