@@ -22,18 +22,18 @@
       <h2>Wave terrain</h2>
       <div id="toolbar">
         <ul>
-          <li><button id="playStopWaveTerrainButton" type="button" onclick="WaveTerrainApp.playStopWaveTerrain();" />Play</button></li>
+          <li><button id="playStopWaveTerrainButton" type="button" onclick="WaveTerrainApp.playStopWaveTerrain();">Play</button></li>
           <li><input id="note" type="range" min="24" max="72" step="1" value="48" oninput="WaveTerrainApp.updateParams();"><label for="note">Note</label></li>
           <li><input id="radius" type="range" min="0.1" max="1" step="0.01" value="0.5" oninput="WaveTerrainApp.updateParams();"><label for="radius">Radius</label></li>
           <li><input id="offset" type="range" min="-1" max="1" step="0.01" value="0.0" oninput="WaveTerrainApp.updateParams();"><label for="offset">Offset</label></li>
-          <li><input id="aux" type="checkbox" onchange="WaveTerrainApp.updateParams();"/><label for="aux">Aux</li>
+          <li><input id="aux" type="checkbox" onchange="WaveTerrainApp.updateParams();"/><label for="aux">Aux</label></li>
         </ul>
         <div id="canvases" class="terrain">
           <canvas id="terrainCanvas"></canvas>
           <canvas id="waveformCanvas"></canvas>
         </div>
         <h4>Generate from equation</h4>
-        <input type="text" id="expression" value="sin(5 * (y + theta))" size="50"/><button id="generate" type="button" onclick="WaveTerrainApp.generate();" />Generate</button>
+        <input type="text" id="expression" value="sin(5 * (y + theta))" size="50"/><button id="generate" type="button" onclick="WaveTerrainApp.generate();">Generate</button>
         <div id="expressionError">&nbsp;</div>
         <h4>Upload image</h4>
 	      <div><input type="file" id="imageFile" accept=".png,.jpg,.jpeg,.gif" onchange="WaveTerrainApp.loadImage(this);"></div>

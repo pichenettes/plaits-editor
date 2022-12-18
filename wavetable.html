@@ -24,7 +24,7 @@
 	      <h2>Custom waves</h2>
 	      <canvas id="wavetableCanvas"></canvas>
 				<h4>Generate from equation</h4>
-	      <div><input type="text" id="expression" value="sin(phi + 3 * (x + 0.125) * sin((1 + floor(4 * y)) * phi))" size="50"/><button id="generate" type="button" onclick="WavetableApp.generateWavetable();" />Generate</button></div>
+	      <div><input type="text" id="expression" value="sin(phi + 3 * (x + 0.125) * sin((1 + floor(4 * y)) * phi))" size="50"/><button id="generate" type="button" onclick="WavetableApp.generateWavetable();">Generate</button></div>
 	      <div id="expressionError">&nbsp;</div>
 				<h4>Load single cycle .wav files</h4>
 				<div><input id="phaseAlign" type="checkbox"><label for="phaseShift">Align all phases</label></div>
@@ -35,14 +35,14 @@
 	      <h2>Map</h2>
 	      <div id="toolbar">
 	        <ul>
-	          <li><button id="playStopWavetableButton" type="button" onclick="WavetableApp.playStopWavetable();" />Play</button></li>
+	          <li><button id="playStopWavetableButton" type="button" onclick="WavetableApp.playStopWavetable();">Play</button></li>
 	          <li><input id="note" type="range" min="24" max="72" step="1" value="48" oninput="WavetableApp.updateParams();"><label for="note">Note</label></li>
 	        </ul>
 	      </div>
 	      <table>
 	        <tr>
 	          <td><input id="x" type="range" min="0" max="1" step="0.01" value="0.5" oninput="WavetableApp.updateParams();"></td>
-	          <td>&nbsp;</td></tr>
+	          <td>&nbsp;</td>
 	        </tr>
 	        <tr>
 	          <td><canvas id="mapCanvas"></canvas></td>
