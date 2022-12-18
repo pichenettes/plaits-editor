@@ -32,9 +32,21 @@
 // - Robust to deviation in both the emitter and receiver's sample rate.
 // - Very low complexity decoder (differentiation + zero-crossing detection).
 
-const CRC = {};
+type Encoding = {
+	sampleRate: number;
+	symbolDurations: number[];
+	packetSize: number;
+	shape: "cosine" | "sine_no_dc";
+};
 
-CRC.table = [
+type Format = {
+	pageSize: number;
+	blankDuration: number;
+	introDuration: number;
+	outroDuration: number;
+};
+
+const CrcTable = [
 	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832,
 	0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91, 0x1db71064, 0x6ab020f2,
 	0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7, 0x136c9856, 0x646ba8c0, 0xfd62f97a,
@@ -64,60 +76,66 @@ CRC.table = [
 	0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9, 0xbdbdf21c, 0xcabac28a, 0x53b39330,
 	0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
-];
+] as const;
 
-CRC.crc32 = function (crc, data) {
+function crc32(crc, data) {
 	crc = ~~crc ^ -1;
 	for (let n = 0; n < data.length; n++) {
-		crc = CRC.table[(crc ^ data[n]) & 0xff] ^ (crc >>> 8);
+		crc = CrcTable[(crc ^ data[n]) & 0xff] ^ (crc >>> 8);
 	}
 	return crc ^ -1;
-};
+}
 
-class Encoder {
-	constructor(encoding, format) {
-		this.sampleRate = encoding.sampleRate;
-		this.symbolDurations = encoding.symbolDurations;
-		this.packetSize = encoding.packetSize;
-		this.samples = [];
+export class Encoder {
+	#format: Format;
+	#sampleRate: Encoding["sampleRate"];
+	#symbolDurations: Encoding["symbolDurations"];
+	#packetSize: Encoding["packetSize"];
+	#polarity = 0;
+	#samples = [];
+
+	constructor(encoding: Encoding, format: Format) {
+		this.#sampleRate = encoding.sampleRate;
+		this.#symbolDurations = encoding.symbolDurations;
+		this.#packetSize = encoding.packetSize;
 
 		const fn = encoding.shape == "cosine" ? Math.cos : Math.sin;
 		const noDC = encoding.shape == "sine_no_dc";
+
 		for (let duration of encoding.symbolDurations) {
-			let gain = noDC ? Math.max(symbolDurations[0] / duration, 0.5) : 1.0;
+			let gain = noDC ? Math.max(encoding.symbolDurations[0] / duration, 0.5) : 1.0;
 			let plus = new Float32Array(duration);
 			let minus = new Float32Array(duration);
 			for (let i = 0; i < duration; i++) {
 				plus[i] = fn((i / duration) * Math.PI) * gain;
 				minus[i] = -plus[i];
 			}
-			this.samples.push([plus, minus]);
-			this.polarity = 0;
+			this.#samples.push([plus, minus]);
 		}
-		this.format = format;
+		this.#format = format;
 	}
 
-	encode(symbols) {
+	encode(symbols: Uint8Array) {
 		let totalDuration = 0;
-		for (let symbol of symbols) {
-			totalDuration += this.symbolDurations[symbol];
+		for (const symbol of symbols) {
+			totalDuration += this.#symbolDurations[symbol];
 		}
 		let block = new Float32Array(totalDuration);
 		let i = 0;
-		for (let symbol of symbols) {
-			block.set(this.samples[symbol][this.polarity], i);
-			i += this.symbolDurations[symbol];
-			this.polarity = 1 - this.polarity;
+		for (const symbol of symbols) {
+			block.set(this.#samples[symbol][this.#polarity], i);
+			i += this.#symbolDurations[symbol];
+			this.#polarity = 1 - this.#polarity;
 		}
 		return block;
 	}
 
-	codeBlank(duration) {
-		let n = Math.ceil((duration * this.sampleRate) / this.symbolDurations[2]);
-		return this.encode(Array(n).fill(2));
+	codeBlank(duration: number) {
+		let n = Math.ceil((duration * this.#sampleRate) / this.#symbolDurations[2]);
+		return this.encode(new Uint8Array(Array(n).fill(2)));
 	}
 
-	pad(data, size) {
+	pad(data: Uint8Array, size: number) {
 		let n = data.length;
 		if (n % size != 0) {
 			let paddedData = new Uint8Array(n + size - (n % size));

@@ -6,6 +6,7 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"target": "ES2020",
 		"strict": true,
+		"checkJs": true,
 		"types": ["webmidi"]
 	},
 	"include": ["src", "types"]
